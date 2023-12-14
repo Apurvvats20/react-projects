@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 
-function ToDoItem({ id, todo, handleDelete, handleEdit }) {
+function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
   const deleteTodo = () => {
     handleDelete(id);
   };
   const [isEditing, setisEditing] = useState(false);
   const [editedToDo, seteditedToDo] = useState(todo);
+  const [completed, setCompleted] = useState(false);
+  const [strikeThroughClass, setstrikeThroughClass] = useState("");
+  const [showModal, setShowModal] = useState("hidden");
 
   const toggleEdit = (e) => {
-    console.log("clicked");
     e.preventDefault();
     setisEditing(!isEditing);
   };
@@ -20,6 +22,19 @@ function ToDoItem({ id, todo, handleDelete, handleEdit }) {
   const saveEdit = () => {
     handleEdit(id, editedToDo);
     setisEditing(false);
+  };
+
+  const markAsComplete = (e) => {
+    setCompleted(!completed);
+    if (!completed) {
+      setstrikeThroughClass("line-through");
+      handleCompletion(id);
+    } else {
+      setstrikeThroughClass("");
+    }
+  };
+  const showModalFunction = () => {
+    showModal === "hidden" ? setShowModal("") : setShowModal("hidden");
   };
 
   return (
@@ -40,7 +55,16 @@ function ToDoItem({ id, todo, handleDelete, handleEdit }) {
             </>
           ) : (
             <>
-              <span className="flex-grow text-gray-700">{todo}</span>
+              <input
+                type="checkbox"
+                className="mr-1"
+                checked={completed}
+                onChange={markAsComplete}
+                disabled={completed}
+              ></input>
+              <span className={`flex-grow text-gray-700 ${strikeThroughClass}`}>
+                {todo}
+              </span>
               <div className="flex">
                 <button onClick={deleteTodo} className="text-red-500">
                   Delete
@@ -51,6 +75,62 @@ function ToDoItem({ id, todo, handleDelete, handleEdit }) {
                 >
                   Edit
                 </button>
+                <button
+                  className="m-2 rounded-full bg-white p-2"
+                  style={{ borderRadius: "50%" }}
+                  onClick={showModalFunction}
+                >
+                  +
+                </button>
+                <div
+                  className={`todosTags ${showModal}`}
+                  style={{
+                    position: "absolute",
+                    marginTop: "55px",
+                    left: "66%",
+                    padding: "5px 20px",
+                    borderRadius: "10px",
+                    background: "skyblue",
+                    color: "white",
+                  }}
+                >
+                  <button
+                    className="P1 tagsItem"
+                    style={{
+                      background: "lightgrey",
+                      padding: "2px 20px",
+                      borderRadius: "10px",
+                      marginBottom: "5px",
+                      marginRight: "5px",
+                    }}
+                  >
+                    P1
+                  </button>
+                  <button
+                    className="P2 tagsItem"
+                    style={{
+                      background: "lightgrey",
+                      padding: "2px 20px",
+                      borderRadius: "10px",
+                      marginBottom: "5px",
+                      marginRight: "5px",
+                    }}
+                  >
+                    P2
+                  </button>
+                  <button
+                    className="P3 tagsItem"
+                    style={{
+                      background: "lightgrey",
+                      padding: "2px 20px",
+                      borderRadius: "10px",
+                      marginBottom: "5px",
+                      marginRight: "5px",
+                    }}
+                  >
+                    P3
+                  </button>
+                </div>
               </div>
             </>
           )}

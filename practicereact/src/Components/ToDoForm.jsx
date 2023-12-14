@@ -9,9 +9,13 @@ function ToDoForm({ onFormSubmit }) {
 
   const getTaskValue = (e) => {
     e.preventDefault();
-    const newtodo = { id: Date.now(), todo: value };
-    onFormSubmit(newtodo);
-    setValue("");
+    if (value.length > 0) {
+      const newtodo = { id: Date.now(), todo: value };
+      onFormSubmit(newtodo);
+      setValue("");
+    } else {
+      alert("TEXT CANNOT BE EMPTY");
+    }
   };
   return (
     <div className="max-w-md mx-auto bg-white rounded p-6">
