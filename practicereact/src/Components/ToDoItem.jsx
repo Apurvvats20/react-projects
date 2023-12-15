@@ -1,6 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
+function ToDoItem({
+  id,
+  todo,
+  handleDelete,
+  handleEdit,
+  handleCompletion,
+  addTags,
+  date,
+}) {
   const deleteTodo = () => {
     handleDelete(id);
   };
@@ -9,6 +17,17 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
   const [completed, setCompleted] = useState(false);
   const [strikeThroughClass, setstrikeThroughClass] = useState("");
   const [showModal, setShowModal] = useState("hidden");
+  const [tags, setTags] = useState("");
+  const [classname, setClassname] = useState("hidden");
+  const [dueDateAvailable, setdueDateAvailable] = useState(false);
+
+  useEffect(() => {
+    if (date) {
+      setdueDateAvailable(true);
+    } else {
+      setdueDateAvailable(false);
+    }
+  }, []);
 
   const toggleEdit = (e) => {
     e.preventDefault();
@@ -37,6 +56,15 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
     showModal === "hidden" ? setShowModal("") : setShowModal("hidden");
   };
 
+  const addTagsToTask = (e) => {
+    setClassname("flex");
+    if (e.target.value === tags) {
+      setClassname("hidden");
+    }
+    setTags(e.target.value);
+    setShowModal("hidden");
+    addTags(id, tags);
+  };
   return (
     <div className="max-w-md mx-auto bg-white rounded p-6">
       <ul className="space-y-4">
@@ -75,6 +103,18 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
                 >
                   Edit
                 </button>
+                <div
+                  className={`${classname}`}
+                  style={{
+                    alignItems: "center",
+                    margin: "3px",
+                    background: "lightgreen",
+                    borderRadius: "10px",
+                    padding: "3px",
+                  }}
+                >
+                  {tags}
+                </div>
                 <button
                   className="m-2 rounded-full bg-white p-2"
                   style={{ borderRadius: "50%" }}
@@ -82,6 +122,7 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
                 >
                   +
                 </button>
+
                 <div
                   className={`todosTags ${showModal}`}
                   style={{
@@ -103,6 +144,8 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
                       marginBottom: "5px",
                       marginRight: "5px",
                     }}
+                    onClick={addTagsToTask}
+                    value={`P1`}
                   >
                     P1
                   </button>
@@ -115,6 +158,8 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
                       marginBottom: "5px",
                       marginRight: "5px",
                     }}
+                    onClick={addTagsToTask}
+                    value={`P2`}
                   >
                     P2
                   </button>
@@ -127,6 +172,8 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
                       marginBottom: "5px",
                       marginRight: "5px",
                     }}
+                    onClick={addTagsToTask}
+                    value={`P3`}
                   >
                     P3
                   </button>
@@ -136,6 +183,7 @@ function ToDoItem({ id, todo, handleDelete, handleEdit, handleCompletion }) {
           )}
         </li>
       </ul>
+      {dueDateAvailable ? <div>{`Due by Date : ${date} `}</div> : ""}
     </div>
   );
 }

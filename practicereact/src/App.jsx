@@ -11,7 +11,12 @@ function App() {
   }, [todos]);
 
   const handleFormSubmit = (newtodo) => {
-    settodos([...todos, { ...newtodo, completed: false }]);
+    let newtodoDate = new Date(newtodo.date);
+    if (newtodoDate < Date.now()) {
+      alert("Due date cannot be in the past");
+    } else {
+      settodos([...todos, { ...newtodo, completed: false }]);
+    }
   };
 
   const handleDelete = (id) => {
@@ -49,9 +54,8 @@ function App() {
     const shuffledTodos = [...todos].sort((a, b) => b.id - a.id);
     settodos(shuffledTodos);
   };
-  const returnalltodos = () => {
-    console.log(todos);
-  };
+
+  const addTags = (id, tags) => {};
 
   return (
     <>
@@ -70,12 +74,14 @@ function App() {
           </div>
           {todos.map((todo) => (
             <ToDoItem
+              date={todo.date}
               id={todo.id}
               key={todo.id}
               todo={todo.todo}
               handleDelete={handleDelete}
               handleEdit={handleEdit}
               handleCompletion={handleCompletion}
+              addTags={addTags}
             />
           ))}
         </div>
